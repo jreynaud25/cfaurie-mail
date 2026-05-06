@@ -33,7 +33,7 @@ const COMPANY = {
   name: 'Christian FAURIE',
   name2: 'Travaux Publics',
   phone: '04 75 30 28 45',
-  email: 'contact@c-faurietp.fr',
+  website: 'www.c-faurietp.fr',
 };
 
 // Liste générée depuis l'organigramme — uniquement les personnes ayant un intitulé.
@@ -114,7 +114,7 @@ function buildSignatureHTML(rawF) {
     <div style="font-weight:700;font-size:${nameSize}px;line-height:${LH};color:${GREEN};white-space:nowrap">${COMPANY.name2}</div>
     <div style="border-top:1px solid ${GREEN};margin:${hrMarginV}px 0;font-size:0;line-height:0">&nbsp;</div>
     <div style="font-weight:700;font-size:${contactSize}px;line-height:${LH};color:${GREEN};white-space:nowrap"><a href="tel:${COMPANY.phone.replace(/\s/g,'')}" style="color:${GREEN};text-decoration:none">${COMPANY.phone}</a></div>
-    <div style="font-weight:700;font-size:${contactSize}px;line-height:${LH};color:${GREEN};white-space:nowrap"><a href="mailto:${COMPANY.email}" style="color:${GREEN};text-decoration:none">${COMPANY.email}</a></div></td>`;
+    <div style="font-weight:700;font-size:${contactSize}px;line-height:${LH};color:${GREEN};white-space:nowrap"><a href="https://${COMPANY.website}" style="color:${GREEN};text-decoration:none">${COMPANY.website}</a></div></td>`;
 
   const sepCell = `<td valign="top" style="padding:0 ${colGap}px 0 0;vertical-align:top">
     <div style="width:1px;height:${colH}px;background:${GREEN};font-size:0;line-height:0">&nbsp;</div></td>`;

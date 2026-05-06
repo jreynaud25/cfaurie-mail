@@ -87,7 +87,7 @@ const COMPANY = {
   name: 'Christian FAURIE',
   name2: 'Travaux Publics',
   phone: '04 75 30 28 45',
-  email: 'contact@c-faurietp.fr',
+  website: 'www.c-faurietp.fr',
 };
 
 // CF logo extracted from Frame 5.svg (green square + black CF mark)
@@ -127,7 +127,7 @@ function buildSignatureHTML(f) {
   const colGap = 18;
   const sepColor = GREEN;
   // Calibrate hr block so the COMPANY total height equals the PERSON total height,
-  // ensuring "contact@c-faurietp.fr" sits at exactly the same y as the employee's email.
+  // ensuring "www.c-faurietp.fr" sits at exactly the same y as the employee's email.
   //   personH  = lh(name) + 2*lh(sub) + 2*lh(contact)
   //   companyH = 2*lh(name) + hrBlockH + 2*lh(contact)
   // → hrBlockH = 2*lh(sub) - lh(name)
@@ -148,7 +148,7 @@ function buildSignatureHTML(f) {
       <div style="font-weight:700;font-size:${nameSize}px;line-height:${LH};color:${GREEN};white-space:nowrap">${COMPANY.name2}</div>
       <div style="border-top:1px solid ${GREEN};margin:${hrMarginV}px 0;font-size:0;line-height:0">&nbsp;</div>
       <div style="font-weight:700;font-size:${contactSize}px;line-height:${LH};color:${GREEN};white-space:nowrap"><a href="tel:${COMPANY.phone.replace(/\s/g,'')}" style="color:${GREEN};text-decoration:none">${COMPANY.phone}</a></div>
-      <div style="font-weight:700;font-size:${contactSize}px;line-height:${LH};color:${GREEN};white-space:nowrap"><a href="mailto:${COMPANY.email}" style="color:${GREEN};text-decoration:none">${COMPANY.email}</a></div>
+      <div style="font-weight:700;font-size:${contactSize}px;line-height:${LH};color:${GREEN};white-space:nowrap"><a href="https://${COMPANY.website}" style="color:${GREEN};text-decoration:none">${COMPANY.website}</a></div>
     </td>`;
 
   const sepCell = `
