@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Générateur de signature — CFAURIE TP</title>
+<style>
+  :root { --green:#067433; --sig-font: Helvetica, Arial, sans-serif; }
+  * { box-sizing:border-box; }
+  body { font-family: var(--sig-font); margin:0; padding:32px; background:#f5f5f5; color:#222; }
+  h1 { font-size:20px; margin:0 0 24px; }
+  .wrap { max-width:1100px; margin:0 auto; display:grid; grid-template-columns:1fr 1.2fr; gap:32px; }
+  .card { background:#fff; border-radius:8px; padding:24px; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+  label { display:block; font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:#666; margin:12px 0 4px; }
+  input { width:100%; padding:10px 12px; border:1px solid #ddd; border-radius:6px; font:inherit; }
+  button { background:var(--green); color:#fff; border:0; padding:10px 16px; border-radius:6px; font:inherit; cursor:pointer; margin:8px 8px 0 0; }
+  button.alt { background:#fff; color:var(--green); border:1px solid var(--green); }
+  .preview { display:flex; align-items:center; justify-content:center; min-height:160px; background:#fff; border:1px dashed #ddd; border-radius:6px; padding:20px; overflow:auto; }
+  small { color:#888; display:block; margin-top:8px; font-size:12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1>Signature CFAURIE TP</h1>
+    <label>Nom complet</label>
+    <input id="name" value="Louisa Grenot">
+    <label>Intitulé — ligne 1</label>
+    <input id="title" value="Co-gérante">
+    <label for="title2">Intitulé — ligne 2 (optionnel)</label>
+    <input id="title2" value="" placeholder="Suite de l'intitulé si trop long">
+    <label>Email</label>
+    <input id="email" value="louisa@cfaurietp.fr" type="email">
+    <label>Téléphone</label>
+    <input id="phone" value="06 65 62 69 30">
+    <div style="margin-top:16px;">
+      <button onclick="copySignature()">Copier la signature</button>
+      <button class="alt" onclick="downloadPNG()">Exporter en PNG</button>
+    </div>
+    <small id="status" style="min-height:14px"></small>
+
+    <details style="margin-top:18px;border-top:1px solid #eee;padding-top:14px">
+      <summary style="cursor:pointer;font-weight:bold;color:var(--green)">📧 Apple Mail (macOS)</summary>
+      <ol style="font-size:12px;color:#555;line-height:1.5;padding-left:20px">
+        <li>Clique <b>Copier la signature</b></li>
+        <li>Mail → <b>Réglages</b> → <b>Signatures</b></li>
+        <li>Sélectionne ton compte, clique <b>+</b> pour créer une nouvelle signature</li>
+        <li><b>Décoche</b> « Toujours utiliser la police par défaut »</li>
+        <li>Clique dans la zone d'édition à droite et fais <b>Cmd+V</b></li>
+        <li>Renomme la signature, ferme les Réglages</li>
+      </ol>
+    </details>
+
+    <details style="margin-top:8px">
+      <summary style="cursor:pointer;font-weight:bold;color:var(--green)">📨 Gmail (web)</summary>
+      <ol style="font-size:12px;color:#555;line-height:1.5;padding-left:20px">
+        <li>Clique <b>Copier la signature</b></li>
+        <li>Gmail → <b>⚙️ Paramètres</b> → <b>Voir tous les paramètres</b></li>
+        <li>Onglet <b>Général</b>, descend jusqu'à <b>Signature</b></li>
+        <li>Clique <b>+ Créer</b>, donne un nom</li>
+        <li>Clique dans la zone et fais <b>Cmd+V</b> (ou Ctrl+V)</li>
+        <li>Sélectionne la signature comme défaut, sauvegarde en bas</li>
+      </ol>
+    </details>
+
+    <details style="margin-top:8px">
+      <summary style="cursor:pointer;font-weight:bold;color:var(--green)">📩 Outlook (web / desktop)</summary>
+      <ol style="font-size:12px;color:#555;line-height:1.5;padding-left:20px">
+        <li>Clique <b>Copier la signature</b></li>
+        <li><b>Web :</b> ⚙️ → Voir tous les paramètres → Courrier → <b>Composer et répondre</b></li>
+        <li><b>Desktop :</b> Outlook → Réglages → <b>Signatures</b></li>
+        <li>Crée une nouvelle signature, clique dans la zone et <b>Cmd+V</b> / Ctrl+V</li>
+        <li>Sauvegarde, puis dans « Sélectionner les signatures par défaut » choisis-la</li>
+      </ol>
+    </details>
+  </div>
+  <div class="card">
+    <div class="preview">
+      <div id="sig"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const GREEN = '#067433';
+const COMPANY = {
+  name: 'Christian FAURIE',
+  name2: 'Travaux Publics',
+  phone: '04 75 30 28 45',
+  email: 'contact@c-faurietp.fr',
+};
+
+// CF logo extracted from Frame 5.svg (green square + black CF mark)
+// Logo spans approx x:10–166, y:12–115 in the source viewBox.
+const LOGO_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="WIDTH" viewBox="10 12 156 103" fill="none">
+<path d="M114.862 93.7287H96.412V112.178C96.412 112.493 96.6675 112.749 96.983 112.749H114.862C115.178 112.749 115.432 112.493 115.432 112.178V94.2985C115.432 93.9842 115.178 93.7287 114.862 93.7287Z" fill="#067433"/>
+<path d="M165.161 13.2786H96.7725C96.4571 13.2786 96.2016 13.5341 96.2016 13.8484V32.2963C93.7325 27.9323 90.5637 24.2137 86.7783 21.2469C82.9663 18.2657 78.5956 15.9655 73.7896 14.4104C68.9791 12.8521 63.8064 12.0624 58.415 12.0624C50.9166 12.0624 44.0757 13.4086 38.079 16.0643C32.08 18.7212 26.9473 22.4376 22.8232 27.1126C18.7036 31.781 15.5025 37.3257 13.3088 43.5912C11.114 49.8468 10 56.7221 10 64.0262C10 71.1503 11.114 77.889 13.3088 84.0557C15.5036 90.2347 18.7058 95.6872 22.8266 100.264C26.954 104.848 32.0866 108.495 38.0823 111.102C44.0779 113.711 50.9188 115.034 58.415 115.034C64.4529 115.034 70.0687 114.105 75.1058 112.274C80.1551 110.437 84.6202 107.738 88.3789 104.252C91.5789 101.287 94.2723 97.742 96.4193 93.7012V74.3136H159.49C159.805 74.3136 160.06 74.0582 160.06 73.7438V55.8624C160.06 55.5481 159.805 55.2926 159.49 55.2926H96.9736C96.6582 55.2926 96.4038 55.5481 96.4038 55.8624V74.3125L80.6283 74.307C80.304 74.307 80.0529 74.5058 80.0218 74.819L80.0251 74.7835C79.2177 81.1834 76.9907 86.4049 73.4008 90.3024C69.8355 94.181 64.7939 96.1481 58.415 96.1481C53.7012 96.1481 49.6504 95.2274 46.3749 93.4124C43.096 91.5986 40.3981 89.1495 38.3566 86.1317C36.3096 83.1061 34.7945 79.6462 33.856 75.8497C32.9152 72.0323 32.4376 68.0536 32.4376 64.0262C32.4376 59.8198 32.9152 55.6802 33.8571 51.7228C34.7957 47.7952 36.3106 44.2432 38.3588 41.1676C40.3937 38.1132 43.0916 35.6418 46.3749 33.8236C49.6504 32.0075 53.7012 31.0868 58.415 31.0868C60.9808 31.0868 63.4732 31.5133 65.8224 32.3541C68.1716 33.1983 70.303 34.3889 72.158 35.8906C74.0117 37.3901 75.5834 39.1606 76.8263 41.1543C78.0392 43.1081 78.8312 45.2817 79.191 47.6143C79.2488 47.9275 79.452 48.1519 79.7664 48.1496H100.397C100.706 48.1451 100.987 47.8941 100.957 47.5854C100.315 41.9018 98.7329 36.7881 96.2538 32.3841C96.2383 32.3552 96.2205 32.3285 96.2039 32.2997H165.161C165.476 32.2997 165.73 32.0453 165.73 31.7299V13.8484C165.73 13.5341 165.476 13.2786 165.161 13.2786Z" fill="black"/>
+</svg>`;
+
+function escapeHTML(s){return (s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+// Met automatiquement le nom de famille en majuscules
+function formatName(n) {
+  const parts = (n||'').trim().split(/\s+/);
+  if (parts.length < 2) return n;
+  return parts[0] + ' ' + parts.slice(1).join(' ').toUpperCase();
+}
+
+function getFields() {
+  return {
+    name:  document.getElementById('name').value || ' ',
+    title: document.getElementById('title').value || ' ',
+    title2: document.getElementById('title2').value || '',
+    email: document.getElementById('email').value,
+    phone: document.getElementById('phone').value,
+  };
+}
+
+// Generate the signature HTML (table-based for max email-client compat).
+// Logo height ~70px, company side green, personal side black, separated by 1px green line.
+function buildSignatureHTML(f) {
+  const nameSize = 16;
+  const subSize  = 13;
+  const contactSize = 13; // same line height as intitulé
+  const LH = 1.3;         // shared line-height multiplier — gives consistent vertical rhythm
+  const lh = (s) => Math.round(s * LH);
+  const colGap = 18;
+  const sepColor = GREEN;
+  // Calibrate hr block so the COMPANY total height equals the PERSON total height,
+  // ensuring "contact@c-faurietp.fr" sits at exactly the same y as the employee's email.
+  //   personH  = lh(name) + 2*lh(sub) + 2*lh(contact)
+  //   companyH = 2*lh(name) + hrBlockH + 2*lh(contact)
+  // → hrBlockH = 2*lh(sub) - lh(name)
+  const hrBlockH = Math.max(1, 2 * lh(subSize) - lh(nameSize));
+  const hrMarginV = Math.max(0, Math.round((hrBlockH - 1) / 2)); // 1px border + symmetric margins
+  const colH = lh(nameSize) + lh(subSize) * 2 + lh(contactSize) * 2;
+  const logoH = colH;
+  const logoW = Math.round(logoH * 156/103);
+
+  const logoCell = `
+    <td valign="top" style="padding:0 ${colGap}px 0 0;vertical-align:top">
+      <div style="line-height:0;font-size:0">${LOGO_SVG.replace('WIDTH', logoW)}</div>
+    </td>`;
+
+  const companyCell = `
+    <td valign="top" style="padding:0 ${colGap}px 0 0;vertical-align:top;font-family:Helvetica,Arial,sans-serif;color:${GREEN}">
+      <div style="font-weight:700;font-size:${nameSize}px;line-height:${LH};color:${GREEN};white-space:nowrap">${COMPANY.name}</div>
+      <div style="font-weight:700;font-size:${nameSize}px;line-height:${LH};color:${GREEN};white-space:nowrap">${COMPANY.name2}</div>
+      <div style="border-top:1px solid ${GREEN};margin:${hrMarginV}px 0;font-size:0;line-height:0">&nbsp;</div>
+      <div style="font-weight:700;font-size:${contactSize}px;line-height:${LH};color:${GREEN};white-space:nowrap"><a href="tel:${COMPANY.phone.replace(/\s/g,'')}" style="color:${GREEN};text-decoration:none">${COMPANY.phone}</a></div>
+      <div style="font-weight:700;font-size:${contactSize}px;line-height:${LH};color:${GREEN};white-space:nowrap"><a href="mailto:${COMPANY.email}" style="color:${GREEN};text-decoration:none">${COMPANY.email}</a></div>
+    </td>`;
+
+  const sepCell = `
+    <td valign="top" style="padding:0 ${colGap}px 0 0;vertical-align:top">
+      <div style="width:1px;height:${colH}px;background:${sepColor};font-size:0;line-height:0">&nbsp;</div>
+    </td>`;
+
+  // Person column — both title lines are ALWAYS rendered (transparent + &nbsp; when
+  // empty) so the vertical rhythm is identical whether the title has 0, 1, or 2 lines.
+  const title1Filled = !!(f.title && f.title.trim());
+  const title2Filled = !!(f.title2 && f.title2.trim());
+  const personCell = `
+    <td valign="top" style="vertical-align:top;font-family:Helvetica,Arial,sans-serif;color:#000000">
+      <div style="font-weight:700;font-size:${nameSize}px;line-height:${LH};color:#000000;white-space:nowrap">${escapeHTML(f.name) || '&nbsp;'}</div>
+      <div style="font-weight:400;font-size:${subSize}px;line-height:${LH};color:${title1Filled ? '#000000' : 'transparent'}">${title1Filled ? escapeHTML(f.title) : '&nbsp;'}</div>
+      <div style="font-weight:400;font-size:${subSize}px;line-height:${LH};color:${title2Filled ? '#000000' : 'transparent'}">${title2Filled ? escapeHTML(f.title2) : '&nbsp;'}</div>
+      ${f.phone ? `<div style="font-weight:700;font-size:${contactSize}px;line-height:${LH};color:#000000;white-space:nowrap"><a href="tel:${f.phone.replace(/\s/g,'')}" style="color:#000000;text-decoration:none">${escapeHTML(f.phone)}</a></div>` : ''}
+      ${f.email ? `<div style="font-weight:700;font-size:${contactSize}px;line-height:${LH};color:#000000;white-space:nowrap"><a href="mailto:${f.email}" style="color:#000000;text-decoration:none">${escapeHTML(f.email)}</a></div>` : ''}
+    </td>`;
+
+  return `<table cellpadding="0" cellspacing="0" border="0" role="presentation" bgcolor="#ffffff" style="border-collapse:collapse;font-family:Helvetica,Arial,sans-serif;background-color:#ffffff;color-scheme:light only">
+    <tr>${logoCell}${companyCell}${sepCell}${personCell}</tr>
+  </table>`;
+}
+
+function render() {
+  const f = getFields();
+  document.getElementById('sig').innerHTML = buildSignatureHTML(f);
+}
+
+['name','title','title2','email','phone'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', render);
+});
+render();
+
+function setStatus(s){document.getElementById('status').textContent=s;}
+
+async function copySignature() {
+  const f = getFields();
+  const html = buildSignatureHTML(f);
+  const holder = document.createElement('div');
+  holder.setAttribute('contenteditable','true');
+  holder.style.cssText = 'position:fixed;left:-10000px;top:0;background:#ffffff;';
+  holder.innerHTML = html;
+  document.body.appendChild(holder);
+  const range = document.createRange();
+  range.selectNodeContents(holder);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+  let ok = false;
+  try { ok = document.execCommand('copy'); } catch(e) {}
+  sel.removeAllRanges();
+  document.body.removeChild(holder);
+  setStatus(ok ? 'Copié ✓ — colle dans la signature Mail (Cmd+V).' : 'Erreur copie.');
+}
+
+// Export PNG via SVG foreignObject → canvas, rendu @4x retina
+async function downloadPNG() {
+  const node = document.getElementById('sig');
+  const padX = 16, padY = 18;
+  const w = Math.ceil(Math.max(node.scrollWidth, node.offsetWidth));
+  const h = Math.ceil(Math.max(node.scrollHeight, node.offsetHeight));
+  const totalW = w + padX*2, totalH = h + padY*2;
+  const clone = node.cloneNode(true);
+  const styleBlock = `<style>
+    *{font-family:Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
+    a{text-decoration:none}
+  </style>`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${totalW}" height="${totalH}">
+    <rect width="100%" height="100%" fill="#ffffff"/>
+    <foreignObject x="${padX}" y="${padY}" width="${w}" height="${h+padY}">
+      <div xmlns="http://www.w3.org/1999/xhtml">${styleBlock}${new XMLSerializer().serializeToString(clone)}</div>
+    </foreignObject></svg>`;
+  const img = new Image();
+  img.src = 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+  await new Promise((res,rej)=>{img.onload=res;img.onerror=rej;});
+  const scale = 4;
+  const c = document.createElement('canvas');
+  c.width = totalW*scale; c.height = totalH*scale;
+  const ctx = c.getContext('2d');
+  ctx.imageSmoothingQuality = 'high';
+  ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,c.width,c.height);
+  ctx.scale(scale,scale);
+  ctx.drawImage(img,0,0);
+  const a = document.createElement('a');
+  a.href = c.toDataURL('image/png'); a.download = 'signature-cfaurietp.png'; a.click();
+  setStatus('PNG téléchargé.');
+}
+</script>
+</body>
+</html>
