@@ -37,20 +37,20 @@ const COMPANY = {
 };
 
 // Liste générée depuis l'organigramme — uniquement les personnes ayant un intitulé.
-// ⚠️ Les emails sont à vérifier (convention présumée prenom@cfaurietp.fr).
+// ⚠️ Les emails sont à vérifier (convention présumée prenom@c-faurietp.fr).
 const PEOPLE = [
-  { name: 'Romain Faurie',       title: 'Gérant',                                  title2: '',                                       email: 'romain@cfaurietp.fr',       phone: '06 38 55 11 16' },
-  { name: 'Louisa Grenot',       title: 'Co-gérante - Directrice',                 title2: 'Administrative et Financière',           email: 'louisa@cfaurietp.fr',       phone: '06 65 62 69 30' },
-  { name: 'Aurelien Clauzier',   title: "Chargé d'affaire",                        title2: '',                                       email: 'aurelien.c@cfaurietp.fr',   phone: '06 53 29 82 32' },
-  { name: 'Aurelien Fournel',    title: 'Conducteur de travaux',                   title2: '',                                       email: 'aurelien.f@cfaurietp.fr',   phone: '06 75 03 43 24' },
-  { name: 'Julien Plantier',     title: 'Conducteur de travaux',                   title2: '',                                       email: 'julien@cfaurietp.fr',       phone: '06 27 31 51 88' },
-  { name: 'Samuel Bard',         title: 'Conducteur de travaux',                   title2: '',                                       email: 'samuel@cfaurietp.fr',       phone: '09 28 67 04 36' },
-  { name: 'Dimitri Duchamp',     title: 'Conducteur de travaux',                   title2: 'Référent Agence Nord Ardèche',           email: 'dimitri@cfaurietp.fr',      phone: '07 81 87 50 14' },
-  { name: 'Stéphane Sauvignet',  title: 'Chef de chantier',                        title2: '',                                       email: 'stephane@cfaurietp.fr',     phone: '06 95 41 22 78' },
-  { name: 'Manon Reille',        title: 'Assistante administrative et technique',  title2: '',                                       email: 'manon@cfaurietp.fr',        phone: '06 24 22 67 87' },
-  { name: 'Marie-Laure Francon', title: 'Comptable',                               title2: 'Administration du personnel',            email: 'marie-laure@cfaurietp.fr',  phone: '06 31 35 42 37' },
-  { name: 'Jonathan Mounier',    title: 'Chargé de maintenance',                   title2: '',                                       email: 'jonathan@cfaurietp.fr',     phone: '06 40 19 13 75' },
-  { name: 'Denis Robert',        title: 'Mécanicien',                              title2: '',                                       email: 'denis@cfaurietp.fr',        phone: '06 06 04 79 65' },
+  { name: 'Romain Faurie',       title: 'Gérant',                                  title2: '',                                       email: 'romain@c-faurietp.fr',       phone: '06 38 55 11 16' },
+  { name: 'Louisa Grenot',       title: 'Co-gérante - Directrice',                 title2: 'Administrative et Financière',           email: 'louisa@c-faurietp.fr',       phone: '06 65 62 69 30' },
+  { name: 'Aurelien Clauzier',   title: "Chargé d'affaire",                        title2: '',                                       email: 'aurelien.c@c-faurietp.fr',   phone: '06 53 29 82 32' },
+  { name: 'Aurelien Fournel',    title: 'Conducteur de travaux',                   title2: '',                                       email: 'aurelien.f@c-faurietp.fr',   phone: '06 75 03 43 24' },
+  { name: 'Julien Plantier',     title: 'Conducteur de travaux',                   title2: '',                                       email: 'julien@c-faurietp.fr',       phone: '06 27 31 51 88' },
+  { name: 'Samuel Bard',         title: 'Conducteur de travaux',                   title2: '',                                       email: 'samuel@c-faurietp.fr',       phone: '09 28 67 04 36' },
+  { name: 'Dimitri Duchamp',     title: 'Conducteur de travaux',                   title2: 'Référent Agence Nord Ardèche',           email: 'dimitri@c-faurietp.fr',      phone: '07 81 87 50 14' },
+  { name: 'Stéphane Sauvignet',  title: 'Chef de chantier',                        title2: '',                                       email: 'stephane@c-faurietp.fr',     phone: '06 95 41 22 78' },
+  { name: 'Manon Reille',        title: 'Assistante administrative et technique',  title2: '',                                       email: 'manon@c-faurietp.fr',        phone: '06 24 22 67 87' },
+  { name: 'Marie-Laure Francon', title: 'Comptable',                               title2: 'Administration du personnel',            email: 'marie-laure@c-faurietp.fr',  phone: '06 31 35 42 37' },
+  { name: 'Jonathan Mounier',    title: 'Chargé de maintenance',                   title2: '',                                       email: 'jonathan@c-faurietp.fr',     phone: '06 40 19 13 75' },
+  { name: 'Denis Robert',        title: 'Mécanicien',                              title2: '',                                       email: 'denis@c-faurietp.fr',        phone: '06 06 04 79 65' },
 ];
 document.getElementById('people').value = JSON.stringify(PEOPLE, null, 2);
 
